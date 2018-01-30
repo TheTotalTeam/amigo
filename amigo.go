@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ivahaev/amigo/uuid"
+	"github.com/TheTotalTeam/amigo/uuid"
 )
 
 var (
@@ -53,6 +53,7 @@ type Settings struct {
 	DialTimeout       time.Duration
 	ReconnectInterval time.Duration
 	Keepalive         bool
+	EventsEnabled     bool
 }
 
 type agiCommand struct {

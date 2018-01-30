@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/ivahaev/amigo/uuid"
+	"github.com/TheTotalTeam/amigo/uuid"
 )
 
 const (
@@ -31,9 +31,10 @@ type amiAdapter struct {
 	id         string
 	eventsChan chan map[string]string
 
-	dialString string
-	username   string
-	password   string
+	dialString    string
+	username      string
+	password      string
+	eventsenabled bool
 
 	connected     bool
 	actionTimeout time.Duration
@@ -55,6 +56,7 @@ func newAMIAdapter(s *Settings, eventEmitter func(string, string)) (*amiAdapter,
 	a.dialTimeout = s.DialTimeout
 	a.mutex = &sync.RWMutex{}
 	a.emitEvent = eventEmitter
+	a.eventsenabled = s.EventsEnabled
 
 	a.actionsChan = make(chan map[string]string)
 	a.responseChans = make(map[string]chan map[string]string)
@@ -268,6 +270,7 @@ func (a *amiAdapter) login(conn net.Conn) error {
 		"Action":   "Login",
 		"Username": a.username,
 		"Secret":   a.password,
+		"Events":   strconv.FormatBool(a.eventsenabled),
 	}
 
 	serialized := serialize(action)
